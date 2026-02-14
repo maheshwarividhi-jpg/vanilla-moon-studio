@@ -11,26 +11,13 @@ export default function Home() {
   const sX = useSpring(mouseX, springConfig);
   const sY = useSpring(mouseY, springConfig);
 
-useEffect(() => {
-    const handleMove = (e: MouseEvent | TouchEvent) => {
-      if ("clientX" in e) {
-        // Desktop
-        mouseX.set(e.clientX);
-        mouseY.set(e.clientY);
-      } else if ("touches" in e && e.touches[0]) {
-        // Mobile
-        mouseX.set(e.touches[0].clientX);
-        mouseY.set(e.touches[0].clientY);
-      }
+  useEffect(() => {
+    const handleMove = (e: MouseEvent) => {
+      mouseX.set(e.clientX);
+      mouseY.set(e.clientY);
     };
-
     window.addEventListener("mousemove", handleMove);
-    window.addEventListener("touchmove", handleMove, { passive: false });
-
-    return () => {
-      window.removeEventListener("mousemove", handleMove);
-      window.removeEventListener("touchmove", handleMove);
-    };
+    return () => window.removeEventListener("mousemove", handleMove);
   }, [mouseX, mouseY]);
 
   const projects = [
@@ -206,3 +193,4 @@ useEffect(() => {
       </div>
     </main>
   );
+}
