@@ -13,12 +13,9 @@ export default function Home() {
   const sY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener("resize", checkMobile);
-
     const handleMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
@@ -88,32 +85,31 @@ export default function Home() {
           {activeTab === "home" && (
             <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }} className="flex flex-col items-center">
               <div className="relative inline-block">
-                
-                {/* LOGO TEXT */}
                 <h1 className="relative z-30 text-[12vw] font-[1000] tracking-tighter leading-[0.8] uppercase italic">
                   VANILLA<br/>
                   <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>MOON</span>
                 </h1>
 
-                {/* MOBILE MOON WITH GLOW */}
+                {/* MOBILE MOON WITH EXTERNAL CSS GLOW */}
                 {isMobile && (
                   <div className="absolute top-[-26%] right-[-7%] w-[15vw] h-[15vw] pointer-events-none z-20">
+                    {/* The Glow (using CSS radial-gradient) */}
                     <motion.div 
-                      animate={{ opacity: [0.4, 0.7, 0.4], scale: [1, 1.2, 1] }}
-                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                      className="absolute inset-[-50%] rounded-full blur-[40px] bg-white/[0.15] z-10"
+                      animate={{ opacity: [0.6, 1, 0.6], scale: [1, 1.15, 1] }}
+                      transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                      className="mobile-moon-glow"
                     />
+                    {/* The Moon */}
                     <motion.img 
                       src="/full-moon.webp" 
                       alt="Moon"
-                      className="relative w-full h-full object-cover mix-blend-screen moon-mask no-box z-20"
+                      className="relative w-full h-full object-cover moon-clean-render z-20"
                       animate={{ rotate: 360 }}
                       transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
                     />
                   </div>
                 )}
               </div>
-              
               <p className="text-[11px] tracking-[0.5em] uppercase text-blue-400 mt-6 font-bold">ARCHITECTS OF IMAGINATION</p>
               <div className="mt-20">
                 <span className="text-[12px] tracking-[0.6em] uppercase text-white/40 block">Two Decades of Strategy • One Imaginative Studio</span>
