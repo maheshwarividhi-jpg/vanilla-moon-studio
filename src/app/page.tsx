@@ -6,18 +6,27 @@ export default function Home() {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const [activeTab, setActiveTab] = useState("home");
+  const [isMobile, setIsMobile] = useState(false);
 
   const springConfig = { stiffness: 250, damping: 30 };
   const sX = useSpring(mouseX, springConfig);
   const sY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
+    // Check if mobile on mount and on resize
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+
     const handleMove = (e: MouseEvent) => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
     };
     window.addEventListener("mousemove", handleMove);
-    return () => window.removeEventListener("mousemove", handleMove);
+    return () => {
+      window.removeEventListener("mousemove", handleMove);
+      window.removeEventListener("resize", checkMobile);
+    };
   }, [mouseX, mouseY]);
 
   const projects = [
@@ -78,10 +87,36 @@ export default function Home() {
           
           {activeTab === "home" && (
             <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
-              <h1 className="relative text-[12vw] font-[1000] tracking-tighter leading-[0.8] uppercase italic">
-                VANILLA<br/>
-                <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>MOON</span>
-              </h1>
+              {/* RELATIVE WRAPPER FOR MOON ALIGNMENT */}
+              <div className="relative inline-block">
+                <h1 className="text-[12vw] font-[1000] tracking-tighter leading-[0.8] uppercase italic">
+                  VANILLA<br/>
+                  <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>MOON</span>
+                </h1>
+
+                {/* MOBILE MOON (Only visible on Home Tab + Mobile) */}
+                {isMobile && (
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ 
+                      opacity: [0.7, 1, 0.7],
+                      scale: [1, 1.15, 1],
+                    }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    className="absolute top-[12.8%] left-[61.5%] w-[4.5vw] h-[4.5vw] pointer-events-none z-[100]"
+                    style={{ transform: "translate(-50%, -50%)" }}
+                  >
+                    <motion.img 
+                      src="/full-moon.webp" 
+                      alt="Moon"
+                      className="w-full h-full object-cover mix-blend-screen"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                    />
+                  </motion.div>
+                )}
+              </div>
+
               <p className="text-[11px] tracking-[0.5em] uppercase text-blue-400 mt-6 font-bold">
                 ARCHITECTS OF IMAGINATION
               </p>
@@ -103,16 +138,8 @@ export default function Home() {
                     className="group relative overflow-hidden p-8 border border-white/10 text-left flex flex-col justify-between h-[300px] transition-all bg-black"
                   >
                     <div className="absolute inset-0 z-0 grayscale-[0.4] opacity-40 group-hover:grayscale-0 group-hover:opacity-60 transition-all duration-1000">
-                      <video 
-                        src={p.video} 
-                        autoPlay 
-                        loop 
-                        muted 
-                        playsInline 
-                        className="w-full h-full object-cover" 
-                      />
+                      <video src={p.video} autoPlay loop muted playsInline className="w-full h-full object-cover" />
                     </div>
-
                     <div className="relative z-10">
                       <span className="text-[8px] tracking-[0.4em] uppercase text-blue-400 font-black mb-4 block">{p.category}</span>
                       <h3 className="text-2xl font-black italic uppercase tracking-tighter mb-2">{p.title}</h3>
@@ -131,22 +158,13 @@ export default function Home() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
                 <div>
                   <h3 className="text-blue-400 text-[10px] tracking-[0.5em] uppercase font-black mb-6">Who We Are</h3>
-                  <p className="text-sm text-gray-400 leading-relaxed mb-6">
-                    Vanilla Moon is a creative strategy and content lab built on two decades of leadership at the intersection of media, branding, and storytelling.
-                  </p>
-                  <p className="text-sm text-gray-400 leading-relaxed">
-                    We engineer strategy-led stories that don't just fill a slot—they strengthen identity, build credibility, and create lasting loyalty.
-                  </p>
+                  <p className="text-sm text-gray-400 leading-relaxed mb-6">Vanilla Moon is a creative strategy and content lab built on two decades of leadership.</p>
+                  <p className="text-sm text-gray-400 leading-relaxed">We engineer strategy-led stories that strengthen identity.</p>
                 </div>
                 <div>
                   <h3 className="text-blue-400 text-[10px] tracking-[0.5em] uppercase font-black mb-6">Concept to Reality</h3>
                   <div className="space-y-6">
-                    {[
-                      { label: "Decode", desc: "Stripping back the noise to find the brand objective." },
-                      { label: "Strategize", desc: "Finding the imaginative angle—from quirky to mature." },
-                      { label: "Execute", desc: "Full lifecycle management: Audio, Video, & Micro-Dramas." },
-                      { label: "Impact", desc: "High-fidelity stories that connect and stay." }
-                    ].map((item) => (
+                    {[{ label: "Decode", desc: "Finding the brand objective." }, { label: "Strategize", desc: "Finding the angle." }, { label: "Execute", desc: "Management of Audio & Video." }, { label: "Impact", desc: "Connection that stays." }].map((item) => (
                       <div key={item.label}>
                         <p className="text-[10px] font-bold text-white uppercase tracking-widest">{item.label}</p>
                         <p className="text-xs text-gray-500">{item.desc}</p>
@@ -170,32 +188,21 @@ export default function Home() {
         </AnimatePresence>
       </div>
 
-      {/* 4. THE 3D MOON CURSOR / MOBILE DOCK */}
-      <motion.div 
-        style={{ left: sX, top: sY, transform: "translate(-50%, -50%)" }}
-        className={`
-          z-[100] pointer-events-none flex items-center justify-center rounded-full overflow-hidden
-          fixed md:w-10 md:h-10 
-          /* Mobile only: Pins over the 'I' in VANILLA */
-          max-md:absolute max-md:top-[12.8%] max-md:left-[61.5%] max-md:w-6 max-md:h-6
-        `}
-      >
-        <motion.img 
-          src="/full-moon.webp" 
-          alt="Moon"
-          className="w-[110%] h-[110%] object-cover mix-blend-screen" 
-          animate={{ 
-            rotate: 360,
-            scale: [1, 1.15, 1], // Breathing effect
-            opacity: [0.7, 1, 0.7] // Glow pulse
-          }}
-          transition={{ 
-            rotate: { duration: 60, repeat: Infinity, ease: "linear" },
-            scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
-            opacity: { duration: 4, repeat: Infinity, ease: "easeInOut" }
-          }}
-        />
-      </motion.div>
+      {/* 4. THE 3D MOON CURSOR (Desktop Only) */}
+      {!isMobile && (
+        <motion.div 
+          style={{ left: sX, top: sY, transform: "translate(-50%, -50%)" }}
+          className="fixed w-10 h-10 z-[100] pointer-events-none flex items-center justify-center rounded-full overflow-hidden"
+        >
+          <motion.img 
+            src="/full-moon.webp" 
+            alt="Moon"
+            className="w-[110%] h-[110%] object-cover mix-blend-screen" 
+            animate={{ rotate: 360 }}
+            transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          />
+        </motion.div>
+      )}
 
       {/* 5. NAVIGATION TABS */}
       <div className="absolute bottom-12 w-full flex justify-center gap-10 md:gap-16 text-[10px] uppercase tracking-[0.5em] text-white/30 font-black px-4">
