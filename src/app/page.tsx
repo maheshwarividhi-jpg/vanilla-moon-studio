@@ -40,7 +40,7 @@ export default function Home() {
   return (
     <main className="relative min-h-screen bg-[#050508] text-white flex flex-col items-center justify-center overflow-hidden md:cursor-none font-sans">
       
-      {/* 1. NEON-METALLIC BACKGROUND: TOP ONLY */}
+      {/* 1. NEON-METALLIC BACKGROUND */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div className="absolute top-[-5%] left-[-5%] w-[85%] h-[85%] bg-blue-900/10 rounded-full blur-[140px]" />
         
@@ -74,10 +74,16 @@ export default function Home() {
         </svg>
       </div>
 
-      {/* 2. THE MOONLIGHT GLOW (BEHIND CURSOR) */}
+      {/* 2. THE MOONLIGHT GLOW (REVISED TO FOLLOW ORBIT ON MOBILE) */}
       <motion.div 
-        style={{ left: sX, top: sY, transform: "translate(-50%, -50%)" }}
-        className="absolute w-[550px] h-[550px] bg-white/[0.12] rounded-full blur-[100px] pointer-events-none z-10"
+        style={!isMobile ? { left: sX, top: sY, transform: "translate(-50%, -50%)" } : {}}
+        animate={isMobile ? {
+            x: [150, -150, 150], 
+            y: [-100, 100, -100],
+        } : {}}
+        transition={isMobile ? { duration: 15, repeat: Infinity, ease: "linear" } : {}}
+        className={`absolute rounded-full blur-[100px] pointer-events-none z-10 
+          ${isMobile ? 'w-[300px] h-[300px] bg-white/[0.08] top-1/2 left-1/2' : 'w-[550px] h-[550px] bg-white/[0.12] absolute'}`}
       />
 
       {/* 3. CENTER CONTENT SECTION */}
@@ -92,16 +98,21 @@ export default function Home() {
                   <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>MOON</span>
                 </h1>
 
-                {/* MOBILE MOON - Fixed Position & Mix Blend to remove box */}
+                {/* MOBILE ORBITING MOON */}
                 {isMobile && (
                   <motion.div 
-                    initial={{ opacity: 0 }}
                     animate={{ 
-                      opacity: [0.7, 1, 0.7],
-                      scale: [1, 1.15, 1],
+                      x: [160, -160, 160], // Horizontal orbit
+                      y: [-80, 80, -80],   // Vertical orbit (Diagonal)
+                      scale: [0.7, 1.1, 0.7], // Simulated depth
+                      opacity: [0.5, 1, 0.5]
                     }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute top-[12.8%] left-[63.8%] w-[4.5vw] h-[4.5vw] pointer-events-none z-[100] mix-blend-screen"
+                    transition={{ 
+                      duration: 12, 
+                      repeat: Infinity, 
+                      ease: "easeInOut" 
+                    }}
+                    className="absolute top-1/2 left-1/2 w-[7vw] h-[7vw] pointer-events-none z-[100] mix-blend-screen"
                     style={{ transform: "translate(-50%, -50%)" }}
                   >
                     <motion.img 
@@ -109,7 +120,7 @@ export default function Home() {
                       alt="Moon"
                       className="w-full h-full object-cover"
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+                      transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
                     />
                   </motion.div>
                 )}
@@ -157,12 +168,12 @@ export default function Home() {
                 <div>
                   <h3 className="text-blue-400 text-[10px] tracking-[0.5em] uppercase font-black mb-6">Who We Are</h3>
                   <p className="text-sm text-gray-400 leading-relaxed mb-6">Vanilla Moon is a creative strategy and content lab built on two decades of leadership.</p>
-                  <p className="text-sm text-gray-400 leading-relaxed">We engineer strategy-led stories that strengthen identity.</p>
+                  <p className="text-sm text-gray-400 leading-relaxed">We engineer strategy-led stories that strengthen identity, build credibility, and create lasting loyalty.</p>
                 </div>
                 <div>
                   <h3 className="text-blue-400 text-[10px] tracking-[0.5em] uppercase font-black mb-6">Concept to Reality</h3>
                   <div className="space-y-6">
-                    {[{ label: "Decode", desc: "Finding the brand objective." }, { label: "Strategize", desc: "Finding the angle." }, { label: "Execute", desc: "Management of Audio & Video." }, { label: "Impact", desc: "Connection that stays." }].map((item) => (
+                    {[{ label: "Decode", desc: "Finding the brand objective." }, { label: "Strategize", desc: "Finding the imaginative angle." }, { label: "Execute", desc: "Lifecycle management: Audio & Video." }, { label: "Impact", desc: "High-fidelity stories that connect." }].map((item) => (
                       <div key={item.label}>
                         <p className="text-[10px] font-bold text-white uppercase tracking-widest">{item.label}</p>
                         <p className="text-xs text-gray-500">{item.desc}</p>
