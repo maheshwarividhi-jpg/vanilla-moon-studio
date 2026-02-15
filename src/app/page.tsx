@@ -30,7 +30,7 @@ export default function Home() {
   ];
 
   return (
-    <main className="relative min-h-screen bg-[#050508] text-white flex flex-col items-center justify-center overflow-hidden cursor-none font-sans">
+    <main className="relative min-h-screen bg-[#050508] text-white flex flex-col items-center justify-center overflow-hidden md:cursor-none font-sans">
       
       {/* 1. NEON-METALLIC BACKGROUND: TOP ONLY */}
       <div className="absolute inset-0 z-0 overflow-hidden">
@@ -78,7 +78,7 @@ export default function Home() {
           
           {activeTab === "home" && (
             <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
-              <h1 className="text-[12vw] font-[1000] tracking-tighter leading-[0.8] uppercase italic">
+              <h1 className="relative text-[12vw] font-[1000] tracking-tighter leading-[0.8] uppercase italic">
                 VANILLA<br/>
                 <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>MOON</span>
               </h1>
@@ -102,7 +102,6 @@ export default function Home() {
                     whileHover={{ scale: 1.05 }}
                     className="group relative overflow-hidden p-8 border border-white/10 text-left flex flex-col justify-between h-[300px] transition-all bg-black"
                   >
-                    {/* VIDEO BACKGROUND WITH SUBTLE COLOR (grayscale-[0.4]) */}
                     <div className="absolute inset-0 z-0 grayscale-[0.4] opacity-40 group-hover:grayscale-0 group-hover:opacity-60 transition-all duration-1000">
                       <video 
                         src={p.video} 
@@ -171,17 +170,30 @@ export default function Home() {
         </AnimatePresence>
       </div>
 
-      {/* 4. THE 3D MOON CURSOR */}
+      {/* 4. THE 3D MOON CURSOR / MOBILE DOCK */}
       <motion.div 
         style={{ left: sX, top: sY, transform: "translate(-50%, -50%)" }}
-        className="fixed w-10 h-10 z-[100] pointer-events-none flex items-center justify-center rounded-full overflow-hidden"
+        className={`
+          z-[100] pointer-events-none flex items-center justify-center rounded-full overflow-hidden
+          fixed md:w-10 md:h-10 
+          /* Mobile only: Pins over the 'I' in VANILLA */
+          max-md:absolute max-md:top-[12.8%] max-md:left-[61.5%] max-md:w-6 max-md:h-6
+        `}
       >
         <motion.img 
           src="/full-moon.webp" 
           alt="Moon"
           className="w-[110%] h-[110%] object-cover mix-blend-screen" 
-          animate={{ rotate: 360 }}
-          transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
+          animate={{ 
+            rotate: 360,
+            scale: [1, 1.15, 1], // Breathing effect
+            opacity: [0.7, 1, 0.7] // Glow pulse
+          }}
+          transition={{ 
+            rotate: { duration: 60, repeat: Infinity, ease: "linear" },
+            scale: { duration: 4, repeat: Infinity, ease: "easeInOut" },
+            opacity: { duration: 4, repeat: Infinity, ease: "easeInOut" }
+          }}
         />
       </motion.div>
 
