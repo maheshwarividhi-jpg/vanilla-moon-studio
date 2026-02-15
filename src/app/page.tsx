@@ -43,7 +43,6 @@ export default function Home() {
       {/* 1. NEON-METALLIC BACKGROUND */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div className="absolute top-[-5%] left-[-5%] w-[85%] h-[85%] bg-blue-900/10 rounded-full blur-[140px]" />
-        
         <svg className="absolute inset-0 w-full h-full opacity-60" xmlns="http://www.w3.org/2000/svg">
           <defs>
             <linearGradient id="neon-metallic-sheen" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -55,7 +54,6 @@ export default function Home() {
               <stop offset="100%" stopColor="rgba(255,255,255,0)" />
             </linearGradient>
           </defs>
-          
           {[...Array(6)].map((_, i) => (
             <motion.path
               key={`neon-wave-${i}`}
@@ -74,45 +72,42 @@ export default function Home() {
         </svg>
       </div>
 
-      {/* 2. THE MOONLIGHT GLOW (REVISED TO FOLLOW ORBIT ON MOBILE) */}
+      {/* 2. THE MOONLIGHT GLOW (FIXED: NO GHOST FOLLOW ON DESKTOP) */}
       <motion.div 
-        style={!isMobile ? { left: sX, top: sY, transform: "translate(-50%, -50%)" } : {}}
-        animate={isMobile ? {
-            x: [150, -150, 150], 
-            y: [-100, 100, -100],
-        } : {}}
-        transition={isMobile ? { duration: 15, repeat: Infinity, ease: "linear" } : {}}
-        className={`absolute rounded-full blur-[100px] pointer-events-none z-10 
-          ${isMobile ? 'w-[300px] h-[300px] bg-white/[0.08] top-1/2 left-1/2' : 'w-[550px] h-[550px] bg-white/[0.12] absolute'}`}
+        style={!isMobile ? { left: sX, top: sY, transform: "translate(-50%, -50%)" } : { left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
+        className={`absolute rounded-full blur-[110px] pointer-events-none z-10 
+          ${isMobile ? 'w-[280px] h-[280px] bg-white/[0.07]' : 'w-[550px] h-[550px] bg-white/[0.12]'}`}
       />
 
       {/* 3. CENTER CONTENT SECTION */}
       <div className="relative z-20 text-center flex flex-col items-center w-full py-10 px-6 max-w-6xl overflow-y-auto max-h-[85vh] no-scrollbar">
         <AnimatePresence mode="wait">
-          
           {activeTab === "home" && (
             <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
               <div className="relative inline-block">
-                <h1 className="text-[12vw] font-[1000] tracking-tighter leading-[0.8] uppercase italic">
+                
+                {/* LOGO TEXT - Middle Z-Index */}
+                <h1 className="relative z-30 text-[12vw] font-[1000] tracking-tighter leading-[0.8] uppercase italic">
                   VANILLA<br/>
                   <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>MOON</span>
                 </h1>
 
-                {/* MOBILE ORBITING MOON */}
+                {/* 3D ORBITING MOON (MOBILE ONLY) */}
                 {isMobile && (
                   <motion.div 
                     animate={{ 
-                      x: [160, -160, 160], // Horizontal orbit
-                      y: [-80, 80, -80],   // Vertical orbit (Diagonal)
-                      scale: [0.7, 1.1, 0.7], // Simulated depth
-                      opacity: [0.5, 1, 0.5]
+                      x: [180, 0, -180, 0, 180], 
+                      y: [-60, 40, 60, -40, -60], 
+                      zIndex: [40, 40, 20, 20, 40], // Swaps behind (20) and in front (40) of text
+                      scale: [1, 1.2, 0.7, 0.6, 1], // Depth scaling
+                      opacity: [1, 1, 0.5, 0.4, 1], 
                     }}
                     transition={{ 
-                      duration: 12, 
+                      duration: 10, 
                       repeat: Infinity, 
-                      ease: "easeInOut" 
+                      ease: "linear" 
                     }}
-                    className="absolute top-1/2 left-1/2 w-[7vw] h-[7vw] pointer-events-none z-[100] mix-blend-screen"
+                    className="absolute top-1/2 left-1/2 w-[8vw] h-[8vw] pointer-events-none mix-blend-screen"
                     style={{ transform: "translate(-50%, -50%)" }}
                   >
                     <motion.img 
@@ -120,32 +115,24 @@ export default function Home() {
                       alt="Moon"
                       className="w-full h-full object-cover"
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+                      transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
                     />
                   </motion.div>
                 )}
               </div>
-
-              <p className="text-[11px] tracking-[0.5em] uppercase text-blue-400 mt-6 font-bold">
-                ARCHITECTS OF IMAGINATION
-              </p>
+              <p className="text-[11px] tracking-[0.5em] uppercase text-blue-400 mt-6 font-bold">ARCHITECTS OF IMAGINATION</p>
               <div className="mt-20">
-                <span className="text-[12px] tracking-[0.6em] uppercase text-white/40 block">
-                  Two Decades of Strategy • One Imaginative Studio
-                </span>
+                <span className="text-[12px] tracking-[0.6em] uppercase text-white/40 block">Two Decades of Strategy • One Imaginative Studio</span>
               </div>
             </motion.div>
           )}
 
+          {/* PROJECT TABS - REMAINING THE SAME */}
           {activeTab === "projects" && (
             <motion.div key="projects" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="w-full flex flex-col items-center">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-12">
                 {projects.map((p, i) => (
-                  <motion.div 
-                    key={i} 
-                    whileHover={{ scale: 1.05 }}
-                    className="group relative overflow-hidden p-8 border border-white/10 text-left flex flex-col justify-between h-[300px] transition-all bg-black"
-                  >
+                  <motion.div key={i} whileHover={{ scale: 1.05 }} className="group relative overflow-hidden p-8 border border-white/10 text-left flex flex-col justify-between h-[300px] transition-all bg-black">
                     <div className="absolute inset-0 z-0 grayscale-[0.4] opacity-40 group-hover:grayscale-0 group-hover:opacity-60 transition-all duration-1000">
                       <video src={p.video} autoPlay loop muted playsInline className="w-full h-full object-cover" />
                     </div>
@@ -167,13 +154,12 @@ export default function Home() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
                 <div>
                   <h3 className="text-blue-400 text-[10px] tracking-[0.5em] uppercase font-black mb-6">Who We Are</h3>
-                  <p className="text-sm text-gray-400 leading-relaxed mb-6">Vanilla Moon is a creative strategy and content lab built on two decades of leadership.</p>
-                  <p className="text-sm text-gray-400 leading-relaxed">We engineer strategy-led stories that strengthen identity, build credibility, and create lasting loyalty.</p>
+                  <p className="text-sm text-gray-400 leading-relaxed mb-6">Vanilla Moon is a creative strategy and content lab.</p>
                 </div>
                 <div>
                   <h3 className="text-blue-400 text-[10px] tracking-[0.5em] uppercase font-black mb-6">Concept to Reality</h3>
                   <div className="space-y-6">
-                    {[{ label: "Decode", desc: "Finding the brand objective." }, { label: "Strategize", desc: "Finding the imaginative angle." }, { label: "Execute", desc: "Lifecycle management: Audio & Video." }, { label: "Impact", desc: "High-fidelity stories that connect." }].map((item) => (
+                    {[{ label: "Decode", desc: "Finding the brand objective." }, { label: "Strategize", desc: "Finding the angle." }].map((item) => (
                       <div key={item.label}>
                         <p className="text-[10px] font-bold text-white uppercase tracking-widest">{item.label}</p>
                         <p className="text-xs text-gray-500">{item.desc}</p>
