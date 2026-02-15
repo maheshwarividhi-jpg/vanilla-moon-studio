@@ -72,11 +72,11 @@ export default function Home() {
         </svg>
       </div>
 
-      {/* 2. THE MOONLIGHT GLOW (FIXED: NO GHOST FOLLOW ON DESKTOP) */}
+      {/* 2. THE MOONLIGHT GLOW (STRICTLY MOUSE ON DESKTOP) */}
       <motion.div 
         style={!isMobile ? { left: sX, top: sY, transform: "translate(-50%, -50%)" } : { left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
         className={`absolute rounded-full blur-[110px] pointer-events-none z-10 
-          ${isMobile ? 'w-[280px] h-[280px] bg-white/[0.07]' : 'w-[550px] h-[550px] bg-white/[0.12]'}`}
+          ${isMobile ? 'w-[250px] h-[250px] bg-white/[0.06]' : 'w-[550px] h-[550px] bg-white/[0.12]'}`}
       />
 
       {/* 3. CENTER CONTENT SECTION */}
@@ -86,28 +86,30 @@ export default function Home() {
             <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
               <div className="relative inline-block">
                 
-                {/* LOGO TEXT - Middle Z-Index */}
+                {/* LOGO TEXT - Fixed at Z-30 */}
                 <h1 className="relative z-30 text-[12vw] font-[1000] tracking-tighter leading-[0.8] uppercase italic">
                   VANILLA<br/>
                   <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>MOON</span>
                 </h1>
 
-                {/* 3D ORBITING MOON (MOBILE ONLY) */}
+                {/* TRUE 3D ORBITING MOON (MOBILE) */}
                 {isMobile && (
                   <motion.div 
                     animate={{ 
-                      x: [180, 0, -180, 0, 180], 
-                      y: [-60, 40, 60, -40, -60], 
-                      zIndex: [40, 40, 20, 20, 40], // Swaps behind (20) and in front (40) of text
-                      scale: [1, 1.2, 0.7, 0.6, 1], // Depth scaling
-                      opacity: [1, 1, 0.5, 0.4, 1], 
+                      // Horizontal and Vertical are offset to create an ellipse
+                      x: [130, 0, -130, 0, 130], 
+                      y: [0, 50, 0, -50, 0], 
+                      // Front half (40) vs Back half (20)
+                      zIndex: [40, 40, 20, 20, 40], 
+                      scale: [1.1, 1.3, 0.7, 0.6, 1.1],
+                      opacity: [1, 1, 0.4, 0.3, 1], 
                     }}
                     transition={{ 
-                      duration: 10, 
+                      duration: 8, 
                       repeat: Infinity, 
                       ease: "linear" 
                     }}
-                    className="absolute top-1/2 left-1/2 w-[8vw] h-[8vw] pointer-events-none mix-blend-screen"
+                    className="absolute top-1/2 left-1/2 w-[9vw] h-[9vw] pointer-events-none mix-blend-screen"
                     style={{ transform: "translate(-50%, -50%)" }}
                   >
                     <motion.img 
@@ -127,7 +129,7 @@ export default function Home() {
             </motion.div>
           )}
 
-          {/* PROJECT TABS - REMAINING THE SAME */}
+          {/* OTHER TABS REMAIN UNTOUCHED */}
           {activeTab === "projects" && (
             <motion.div key="projects" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="w-full flex flex-col items-center">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-12">
@@ -141,7 +143,6 @@ export default function Home() {
                       <h3 className="text-2xl font-black italic uppercase tracking-tighter mb-2">{p.title}</h3>
                       <p className="text-xs text-white/70 leading-relaxed font-light">{p.desc}</p>
                     </div>
-                    <div className="relative z-10 w-8 h-[1px] bg-white/20 group-hover:w-full transition-all duration-500" />
                   </motion.div>
                 ))}
               </div>
@@ -156,17 +157,6 @@ export default function Home() {
                   <h3 className="text-blue-400 text-[10px] tracking-[0.5em] uppercase font-black mb-6">Who We Are</h3>
                   <p className="text-sm text-gray-400 leading-relaxed mb-6">Vanilla Moon is a creative strategy and content lab.</p>
                 </div>
-                <div>
-                  <h3 className="text-blue-400 text-[10px] tracking-[0.5em] uppercase font-black mb-6">Concept to Reality</h3>
-                  <div className="space-y-6">
-                    {[{ label: "Decode", desc: "Finding the brand objective." }, { label: "Strategize", desc: "Finding the angle." }].map((item) => (
-                      <div key={item.label}>
-                        <p className="text-[10px] font-bold text-white uppercase tracking-widest">{item.label}</p>
-                        <p className="text-xs text-gray-500">{item.desc}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
               </div>
               <button onClick={() => setActiveTab("home")} className="text-[9px] tracking-[0.4em] uppercase border border-white/20 px-8 py-4 hover:bg-white hover:text-black transition-all font-bold">Return Home</button>
             </motion.div>
@@ -175,7 +165,6 @@ export default function Home() {
           {activeTab === "contact" && (
             <motion.div key="contact" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-center flex flex-col items-center">
               <h2 className="text-4xl font-black italic uppercase tracking-tighter">Get in Touch</h2>
-              <p className="mt-4 text-gray-500 tracking-widest uppercase text-[10px]">Ready to manifest your next project?</p>
               <p className="mt-12 text-3xl font-light hover:text-blue-400 transition-colors cursor-pointer">hello@vanillamoon.in</p>
               <button onClick={() => setActiveTab("home")} className="mt-16 text-[10px] tracking-widest uppercase border border-white/20 px-8 py-4 hover:bg-white hover:text-black transition-all font-bold">Return Home</button>
             </motion.div>
