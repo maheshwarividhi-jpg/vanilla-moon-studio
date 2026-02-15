@@ -84,7 +84,7 @@ export default function Home() {
         <AnimatePresence mode="wait">
           {activeTab === "home" && (
             <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
-              <div className="relative inline-block overflow-visible">
+              <div className="relative inline-block">
                 
                 {/* LOGO TEXT */}
                 <h1 className="relative z-30 text-[12vw] font-[1000] tracking-tighter leading-[0.8] uppercase italic">
@@ -92,32 +92,27 @@ export default function Home() {
                   <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>MOON</span>
                 </h1>
 
-                {/* BREATHING MOON BEHIND LOGO (MOBILE) */}
+                {/* REFINED BREATHING MOON (MOBILE) */}
                 {isMobile && (
-                  <motion.div 
-                    animate={{ 
-                      scale: [1.1, 1.25, 1.1],
-                      filter: [
-                        "drop-shadow(0 0 10px rgba(255,255,255,0.3))",
-                        "drop-shadow(0 0 30px rgba(255,255,255,0.6))",
-                        "drop-shadow(0 0 10px rgba(255,255,255,0.3))"
-                      ]
-                    }}
-                    transition={{ 
-                      duration: 4, 
-                      repeat: Infinity, 
-                      ease: "easeInOut" 
-                    }}
-                    className="absolute top-[-10%] right-[-12%] w-[22vw] h-[22vw] pointer-events-none z-20 mix-blend-screen overflow-visible"
-                  >
+                  <div className="absolute top-[-22%] right-[-10%] w-[18vw] h-[18vw] pointer-events-none z-20">
+                    {/* Pulsing Back-glow */}
+                    <motion.div 
+                      animate={{ opacity: [0.15, 0.4, 0.15], scale: [1, 1.3, 1] }}
+                      transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                      className="absolute inset-0 bg-white rounded-full blur-[25px]"
+                    />
+                    {/* Softened Moon */}
                     <motion.img 
                       src="/full-moon.webp" 
                       alt="Moon"
-                      className="w-full h-full object-cover"
-                      animate={{ rotate: 360 }}
-                      transition={{ duration: 80, repeat: Infinity, ease: "linear" }}
+                      className="relative w-full h-full object-cover mix-blend-screen filter blur-[1.5px]"
+                      animate={{ rotate: 360, scale: [1, 1.03, 1] }}
+                      transition={{ 
+                        rotate: { duration: 90, repeat: Infinity, ease: "linear" },
+                        scale: { duration: 5, repeat: Infinity, ease: "easeInOut" }
+                      }}
                     />
-                  </motion.div>
+                  </div>
                 )}
               </div>
               <p className="text-[11px] tracking-[0.5em] uppercase text-blue-400 mt-6 font-bold">ARCHITECTS OF IMAGINATION</p>
@@ -127,6 +122,7 @@ export default function Home() {
             </motion.div>
           )}
 
+          {/* TAB CONTENT (PROJECTS, ABOUT, CONTACT) */}
           {activeTab === "projects" && (
             <motion.div key="projects" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="w-full flex flex-col items-center">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-12">
