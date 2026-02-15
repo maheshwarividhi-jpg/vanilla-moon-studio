@@ -24,43 +24,43 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
-/* Add this to the bottom of your globals.css */
-.moon-mask {
-  mask-image: radial-gradient(circle, black 50%, rgba(0, 0, 0, 0) 70%);
-  -webkit-mask-image: radial-gradient(circle, black 50%, rgba(0, 0, 0, 0) 70%);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  transform: translateZ(0);
+
+/* --- THE FINAL MOON FIXES --- */
+
+/* 1. The Container that locks the Glow and Moon together */
+.moon-container {
+  position: absolute;
+  top: -26%;
+  right: -7%;
+  width: 15vw;
+  height: 15vw;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
 }
 
-.no-box {
-  background-color: transparent !important;
-  border: none !important;
-  outline: none !important;
-  box-shadow: none !important;
-}
-/* Bulletproof Mobile Glow */
-.mobile-moon-glow {
+/* 2. The Pinned Glow (Rendered behind the moon) */
+.moon-glow-pinned {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 180%; /* Makes the glow larger than the moon */
-  height: 180%;
-  background: radial-gradient(
-    circle, 
-    rgba(255, 255, 255, 0.25) 0%, 
-    rgba(255, 255, 255, 0.08) 30%, 
-    transparent 70%
-  );
+  width: 250%; /* Large enough to radiate outward */
+  height: 250%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, transparent 70%);
   border-radius: 50%;
   pointer-events: none;
   z-index: 10;
 }
 
-/* Force clean rendering on the moon image */
-.moon-clean-render {
+/* 3. The Moon Image (Cuts the black box out) */
+.moon-asset {
+  position: relative;
+  width: 100%;
+  height: 100%;
   mix-blend-mode: screen;
+  z-index: 20;
+  /* Surgical mask to remove square/diamond artifacts */
+  -webkit-mask-image: radial-gradient(circle, black 60%, transparent 72%);
+  mask-image: radial-gradient(circle, black 60%, transparent 72%);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
   transform: translateZ(0);
