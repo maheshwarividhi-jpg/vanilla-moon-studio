@@ -72,7 +72,7 @@ export default function Home() {
         </svg>
       </div>
 
-      {/* 2. THE MOONLIGHT GLOW (DESKTOP ONLY) */}
+      {/* 2. THE MOONLIGHT GLOW (DESKTOP MOUSE FOLLOW) */}
       <motion.div 
         style={!isMobile ? { left: sX, top: sY, transform: "translate(-50%, -50%)" } : { left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
         className={`absolute rounded-full blur-[110px] pointer-events-none z-10 
@@ -92,16 +92,24 @@ export default function Home() {
                   <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>MOON</span>
                 </h1>
 
-                {/* MOBILE MOON - CLEANED OF ALL FILTERS */}
+                {/* THE FINAL CLEAN MOBILE MOON */}
                 {isMobile && (
-                  <div className="absolute top-[-25%] right-[-10%] w-[16vw] h-[16vw] pointer-events-none z-20 no-box">
-                    {/* CSS Glow Layer */}
+                  <div className="absolute top-[-26%] right-[-7%] w-[15vw] h-[15vw] pointer-events-none z-20 no-box">
+                    
+                    {/* Atmospheric Glow (Breathes behind the moon) */}
                     <motion.div 
-                      animate={{ opacity: [0.1, 0.25, 0.1] }}
-                      transition={{ duration: 4, repeat: Infinity }}
-                      className="absolute inset-0 bg-white rounded-full blur-[15px] no-box"
+                      animate={{ 
+                        opacity: [0.3, 0.5, 0.3],
+                        scale: [1, 1.4, 1] 
+                      }}
+                      transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+                      className="absolute inset-[-40%] rounded-full no-box"
+                      style={{
+                        background: 'radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%)'
+                      }}
                     />
-                    {/* Moon Image with Mask Class */}
+
+                    {/* Sharp Rotating Moon */}
                     <motion.img 
                       src="/full-moon.webp" 
                       alt="Moon"
@@ -119,12 +127,50 @@ export default function Home() {
             </motion.div>
           )}
 
-          {/* OTHER TABS (HIDDEN FOR BREVITY - KEEP YOUR EXISTING ONES) */}
-          {activeTab === "projects" && <div className="text-center py-20">Projects Content...</div>}
+          {/* PROJECT TABS */}
+          {activeTab === "projects" && (
+            <motion.div key="projects" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="w-full flex flex-col items-center">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-12">
+                {projects.map((p, i) => (
+                  <motion.div key={i} whileHover={{ scale: 1.05 }} className="group relative overflow-hidden p-8 border border-white/10 text-left flex flex-col justify-between h-[300px] transition-all bg-black">
+                    <div className="absolute inset-0 z-0 grayscale-[0.4] opacity-40 group-hover:grayscale-0 group-hover:opacity-60 transition-all duration-1000">
+                      <video src={p.video} autoPlay loop muted playsInline className="w-full h-full object-cover" />
+                    </div>
+                    <div className="relative z-10">
+                      <span className="text-[8px] tracking-[0.4em] uppercase text-blue-400 font-black mb-4 block">{p.category}</span>
+                      <h3 className="text-2xl font-black italic uppercase tracking-tighter mb-2">{p.title}</h3>
+                      <p className="text-xs text-white/70 leading-relaxed font-light">{p.desc}</p>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
+              <button onClick={() => setActiveTab("home")} className="text-[9px] tracking-[0.4em] uppercase border border-white/20 px-8 py-4 hover:bg-white hover:text-black transition-all font-bold">Return Home</button>
+            </motion.div>
+          )}
+
+          {activeTab === "about" && (
+            <motion.div key="about" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="text-left max-w-4xl flex flex-col items-center">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+                <div>
+                  <h3 className="text-blue-400 text-[10px] tracking-[0.5em] uppercase font-black mb-6">Who We Are</h3>
+                  <p className="text-sm text-gray-400 leading-relaxed mb-6">Vanilla Moon is a creative strategy and content lab.</p>
+                </div>
+              </div>
+              <button onClick={() => setActiveTab("home")} className="text-[9px] tracking-[0.4em] uppercase border border-white/20 px-8 py-4 hover:bg-white hover:text-black transition-all font-bold">Return Home</button>
+            </motion.div>
+          )}
+
+          {activeTab === "contact" && (
+            <motion.div key="contact" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="text-center flex flex-col items-center">
+              <h2 className="text-4xl font-black italic uppercase tracking-tighter">Get in Touch</h2>
+              <p className="mt-12 text-3xl font-light hover:text-blue-400 transition-colors cursor-pointer">hello@vanillamoon.in</p>
+              <button onClick={() => setActiveTab("home")} className="mt-16 text-[10px] tracking-widest uppercase border border-white/20 px-8 py-4 hover:bg-white hover:text-black transition-all font-bold">Return Home</button>
+            </motion.div>
+          )}
         </AnimatePresence>
       </div>
 
-      {/* 4. THE 3D MOON CURSOR (Desktop Only - UNCHANGED) */}
+      {/* 4. THE 3D MOON CURSOR (Desktop Only) */}
       {!isMobile && (
         <motion.div 
           style={{ left: sX, top: sY, transform: "translate(-50%, -50%)" }}
@@ -142,9 +188,9 @@ export default function Home() {
 
       {/* 5. NAVIGATION TABS */}
       <div className="absolute bottom-12 w-full flex justify-center gap-10 md:gap-16 text-[10px] uppercase tracking-[0.5em] text-white/30 font-black px-4">
-        <span onClick={() => setActiveTab("projects")} className="cursor-pointer hover:text-white">Projects</span>
-        <span onClick={() => setActiveTab("about")} className="cursor-pointer hover:text-white">About Us</span>
-        <span onClick={() => setActiveTab("contact")} className="cursor-pointer hover:text-white">Contact</span>
+        <span onClick={() => setActiveTab("projects")} className={`cursor-pointer transition-all ${activeTab === 'projects' ? 'text-white underline underline-offset-8' : 'hover:text-white'}`}>Projects</span>
+        <span onClick={() => setActiveTab("about")} className={`cursor-pointer transition-all ${activeTab === 'about' ? 'text-white underline underline-offset-8' : 'hover:text-white'}`}>About Us</span>
+        <span onClick={() => setActiveTab("contact")} className={`cursor-pointer transition-all ${activeTab === 'contact' ? 'text-white underline underline-offset-8' : 'hover:text-white'}`}>Contact</span>
       </div>
     </main>
   );
