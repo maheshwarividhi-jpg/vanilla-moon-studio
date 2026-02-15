@@ -72,11 +72,11 @@ export default function Home() {
         </svg>
       </div>
 
-      {/* 2. THE MOONLIGHT GLOW (DESKTOP MOUSE FOLLOW) */}
+      {/* 2. THE MOONLIGHT GLOW (STRICTLY MOUSE ON DESKTOP) */}
       <motion.div 
         style={!isMobile ? { left: sX, top: sY, transform: "translate(-50%, -50%)" } : { left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
         className={`absolute rounded-full blur-[110px] pointer-events-none z-10 
-          ${isMobile ? 'w-[280px] h-[280px] bg-white/[0.08]' : 'w-[550px] h-[550px] bg-white/[0.12]'}`}
+          ${isMobile ? 'w-[280px] h-[280px] bg-white/[0.05]' : 'w-[550px] h-[550px] bg-white/[0.12]'}`}
       />
 
       {/* 3. CENTER CONTENT SECTION */}
@@ -92,25 +92,22 @@ export default function Home() {
                   <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>MOON</span>
                 </h1>
 
-                {/* REFINED BREATHING MOON (MOBILE) */}
+                {/* NO-FILTER BREATHING MOON (MOBILE) */}
                 {isMobile && (
-                  <div className="absolute top-[-22%] right-[-10%] w-[18vw] h-[18vw] pointer-events-none z-20">
-                    {/* Pulsing Back-glow */}
+                  <div className="absolute top-[-25%] right-[-8%] w-[16vw] h-[16vw] pointer-events-none z-20">
+                    {/* Visual Glow using a second blurred layer (No CSS filters used here) */}
                     <motion.div 
-                      animate={{ opacity: [0.15, 0.4, 0.15], scale: [1, 1.3, 1] }}
-                      transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                      className="absolute inset-0 bg-white rounded-full blur-[25px]"
+                      animate={{ opacity: [0.1, 0.3, 0.1], scale: [1, 1.2, 1] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                      className="absolute inset-0 bg-white rounded-full blur-[20px]"
                     />
-                    {/* Softened Moon */}
+                    {/* Sharp Moon Image with mix-blend-screen to kill any edge issues */}
                     <motion.img 
                       src="/full-moon.webp" 
                       alt="Moon"
-                      className="relative w-full h-full object-cover mix-blend-screen filter blur-[1.5px]"
-                      animate={{ rotate: 360, scale: [1, 1.03, 1] }}
-                      transition={{ 
-                        rotate: { duration: 90, repeat: Infinity, ease: "linear" },
-                        scale: { duration: 5, repeat: Infinity, ease: "easeInOut" }
-                      }}
+                      className="relative w-full h-full object-cover mix-blend-screen opacity-90"
+                      animate={{ rotate: 360 }}
+                      transition={{ duration: 100, repeat: Infinity, ease: "linear" }}
                     />
                   </div>
                 )}
@@ -122,7 +119,7 @@ export default function Home() {
             </motion.div>
           )}
 
-          {/* TAB CONTENT (PROJECTS, ABOUT, CONTACT) */}
+          {/* PROJECT TABS */}
           {activeTab === "projects" && (
             <motion.div key="projects" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="w-full flex flex-col items-center">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-12">
