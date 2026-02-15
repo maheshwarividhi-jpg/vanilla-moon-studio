@@ -113,14 +113,31 @@ export default function MonumentArt() {
   if (!isMounted) return <div style={{ background: 'black', minHeight: '100vh' }} />;
 
   return (
-    <main className="main-container">
-      <canvas ref={canvasRef} className="bg-canvas" />
+    <main style={{ backgroundColor: 'black', width: '100vw', height: '100vh', overflow: 'hidden', touchAction: 'none' }}>
+      <canvas ref={canvasRef} style={{ position: 'fixed', inset: 0, zIndex: 1 }} />
       
-      {/* THE FORCED GLOW (MOON AURA) */}
-      <div className="moon-glow-center" />
+      {/* THE GLOW (MOON AURA) */}
+      <div style={{
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: '400px',
+        height: '400px',
+        background: 'radial-gradient(circle, rgba(189,0,255,0.15) 0%, rgba(0,242,255,0.05) 50%, transparent 70%)',
+        filter: 'blur(40px)',
+        zIndex: 5,
+        animation: 'pulseGlow 8s ease-in-out infinite alternate'
+      }} />
 
-      <div className="pillar-perspective">
-        <div className="pillar-rotate" style={{ 
+      <div style={{ 
+        position: 'absolute', inset: 0, zIndex: 10, 
+        display: 'flex', alignItems: 'center', justifyContent: 'center',
+        perspective: '1200px', pointerEvents: 'none'
+      }}>
+        <div style={{ 
+          position: 'relative', width: '280px', height: '400px',
+          transformStyle: 'preserve-3d',
           transform: `rotateY(${rotation}deg)`,
           transition: isDragging.current ? 'none' : 'transform 0.6s cubic-bezier(0.15, 0.85, 0.35, 1)'
         }}>
@@ -129,9 +146,10 @@ export default function MonumentArt() {
               key={s.id}
               src={`/videos/${s.id}.mp4`} 
               autoPlay loop muted playsInline 
-              className="pillar-video"
               style={{ 
-                marginTop: s.y,
+                position: 'absolute', width: '100%', top: '50%', left: '50%',
+                marginTop: s.y, marginLeft: '-50%',
+                mixBlendMode: 'screen', opacity: 0.85,
                 transform: `translateZ(${s.z}px)`,
               }} 
             />
@@ -140,66 +158,9 @@ export default function MonumentArt() {
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
-        .main-container {
-          background-color: black;
-          width: 100vw;
-          height: 100vh;
-          overflow: hidden;
-          touch-action: none;
-          position: relative;
-        }
-        .bg-canvas {
-          position: fixed;
-          inset: 0;
-          z-index: 1;
-        }
-        .moon-glow-center {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          width: 80vw;
-          height: 80vw;
-          max-width: 600px;
-          max-height: 600px;
-          background: radial-gradient(circle, rgba(189,0,255,0.2) 0%, rgba(0,242,255,0.1) 40%, transparent 70%);
-          transform: translate(-50%, -50%);
-          filter: blur(60px);
-          z-index: 2;
-          pointer-events: none;
-          animation: pulseGlow 10s ease-in-out infinite alternate;
-          -webkit-backface-visibility: hidden;
-          will-change: transform, opacity;
-        }
-        .pillar-perspective {
-          position: absolute;
-          inset: 0;
-          z-index: 10;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          perspective: 1200px;
-          pointer-events: none;
-        }
-        .pillar-rotate {
-          position: relative;
-          width: 280px;
-          height: 400px;
-          transform-style: preserve-3d;
-        }
-        .pillar-video {
-          position: absolute;
-          width: 100%;
-          top: 50%;
-          left: 50%;
-          margin-left: -50%;
-          mix-blend-mode: screen;
-          opacity: 0.85;
-          pointer-events: none;
-          -webkit-transform-style: preserve-3d;
-        }
         @keyframes pulseGlow {
-          from { opacity: 0.5; transform: translate(-50%, -50%) scale(0.9); }
-          to { opacity: 0.9; transform: translate(-50%, -50%) scale(1.3); }
+          from { opacity: 0.4; transform: translate(-50%, -50%) scale(1); }
+          to { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2); }
         }
       `}} />
 
