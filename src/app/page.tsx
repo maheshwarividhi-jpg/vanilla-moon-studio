@@ -95,19 +95,21 @@ export default function Home() {
                   <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>MOON</span>
                 </h1>
 
-                {/* MOBILE MOON */}
+                {/* MOBILE MOON WITH NEW GLOW */}
                 {isMobile && (
-                  <div className="absolute top-[-26%] right-[-7%] w-[15vw] h-[15vw] pointer-events-none z-20 no-box">
+                  <div className="absolute top-[-26%] right-[-7%] w-[15vw] h-[15vw] pointer-events-none z-20">
+                    {/* The Glow (Matching Desktop Style) */}
                     <motion.div 
-                      animate={{ opacity: [0.3, 0.5, 0.3], scale: [1, 1.4, 1] }}
-                      transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-                      className="absolute inset-[-40%] rounded-full no-box"
-                      style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 70%)' }}
+                      animate={{ opacity: [0.4, 0.7, 0.4], scale: [1, 1.2, 1] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                      className="absolute inset-[-50%] rounded-full blur-[40px] bg-white/[0.15] z-10"
                     />
+                    
+                    {/* The Moon */}
                     <motion.img 
                       src="/full-moon.webp" 
                       alt="Moon"
-                      className="relative w-full h-full object-cover mix-blend-screen moon-mask no-box"
+                      className="relative w-full h-full object-cover mix-blend-screen moon-mask no-box z-20"
                       animate={{ rotate: 360 }}
                       transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
                     />
