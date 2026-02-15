@@ -13,7 +13,6 @@ export default function Home() {
   const sY = useSpring(mouseY, springConfig);
 
   useEffect(() => {
-    // Check if mobile on mount and on resize
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
     window.addEventListener("resize", checkMobile);
@@ -87,14 +86,13 @@ export default function Home() {
           
           {activeTab === "home" && (
             <motion.div key="home" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
-              {/* RELATIVE WRAPPER FOR MOON ALIGNMENT */}
               <div className="relative inline-block">
                 <h1 className="text-[12vw] font-[1000] tracking-tighter leading-[0.8] uppercase italic">
                   VANILLA<br/>
                   <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>MOON</span>
                 </h1>
 
-                {/* MOBILE MOON (Only visible on Home Tab + Mobile) */}
+                {/* MOBILE MOON - Fixed Position & Mix Blend to remove box */}
                 {isMobile && (
                   <motion.div 
                     initial={{ opacity: 0 }}
@@ -103,13 +101,13 @@ export default function Home() {
                       scale: [1, 1.15, 1],
                     }}
                     transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    className="absolute top-[12.8%] left-[61.5%] w-[4.5vw] h-[4.5vw] pointer-events-none z-[100]"
+                    className="absolute top-[12.8%] left-[63.8%] w-[4.5vw] h-[4.5vw] pointer-events-none z-[100] mix-blend-screen"
                     style={{ transform: "translate(-50%, -50%)" }}
                   >
                     <motion.img 
                       src="/full-moon.webp" 
                       alt="Moon"
-                      className="w-full h-full object-cover mix-blend-screen"
+                      className="w-full h-full object-cover"
                       animate={{ rotate: 360 }}
                       transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
                     />
