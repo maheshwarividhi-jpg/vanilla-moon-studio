@@ -40,7 +40,7 @@ export default function Home() {
   return (
     <main className="relative min-h-screen bg-[#050508] text-white flex flex-col items-center justify-center overflow-hidden md:cursor-none font-sans">
       
-      {/* 1. NEON-METALLIC BACKGROUND */}
+      {/* 1. BACKGROUND WAVES */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <div className="absolute top-[-5%] left-[-5%] w-[85%] h-[85%] bg-blue-900/10 rounded-full blur-[140px]" />
         <svg className="absolute inset-0 w-full h-full opacity-60" xmlns="http://www.w3.org/2000/svg">
@@ -76,7 +76,7 @@ export default function Home() {
       <motion.div 
         style={!isMobile ? { left: sX, top: sY, transform: "translate(-50%, -50%)" } : { left: '50%', top: '50%', transform: 'translate(-50%, -50%)' }}
         className={`absolute rounded-full blur-[110px] pointer-events-none z-10 
-          ${isMobile ? 'w-[250px] h-[250px] bg-white/[0.06]' : 'w-[550px] h-[550px] bg-white/[0.12]'}`}
+          ${isMobile ? 'w-[280px] h-[280px] bg-white/[0.08]' : 'w-[550px] h-[550px] bg-white/[0.12]'}`}
       />
 
       {/* 3. CENTER CONTENT SECTION */}
@@ -92,33 +92,30 @@ export default function Home() {
                   <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>MOON</span>
                 </h1>
 
-                {/* TRUE 3D ORBITING MOON (MOBILE) */}
+                {/* BREATHING MOON BEHIND LOGO (MOBILE) */}
                 {isMobile && (
                   <motion.div 
+                    initial={{ opacity: 0 }}
                     animate={{ 
-                      // Horizontal and Vertical are offset to create an ellipse
-                      x: [130, 0, -130, 0, 130], 
-                      y: [0, 50, 0, -50, 0], 
-                      // Front half (40) vs Back half (20)
-                      zIndex: [40, 40, 20, 20, 40], 
-                      scale: [1.1, 1.3, 0.7, 0.6, 1.1],
-                      opacity: [1, 1, 0.4, 0.3, 1], 
+                      scale: [1, 1.1, 1],
+                      opacity: [0.6, 0.9, 0.6],
                     }}
                     transition={{ 
-                      duration: 8, 
+                      duration: 5, 
                       repeat: Infinity, 
-                      ease: "linear" 
+                      ease: "easeInOut" 
                     }}
-                    className="absolute top-1/2 left-1/2 w-[9vw] h-[9vw] pointer-events-none mix-blend-screen"
-                    style={{ transform: "translate(-50%, -50%)" }}
+                    className="absolute top-[-15%] right-[-10%] w-[18vw] h-[18vw] pointer-events-none z-20 mix-blend-screen"
                   >
                     <motion.img 
                       src="/full-moon.webp" 
                       alt="Moon"
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover filter blur-[1px]"
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 30, repeat: Infinity, ease: "linear" }}
+                      transition={{ duration: 60, repeat: Infinity, ease: "linear" }}
                     />
+                    {/* Extra Soft Glow for the Breathe Effect */}
+                    <div className="absolute inset-0 bg-white/10 rounded-full blur-xl" />
                   </motion.div>
                 )}
               </div>
@@ -129,7 +126,7 @@ export default function Home() {
             </motion.div>
           )}
 
-          {/* OTHER TABS REMAIN UNTOUCHED */}
+          {/* PROJECT TABS */}
           {activeTab === "projects" && (
             <motion.div key="projects" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="w-full flex flex-col items-center">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full mb-12">
