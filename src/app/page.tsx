@@ -95,17 +95,14 @@ export default function Home() {
                   <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>MOON</span>
                 </h1>
 
-                {/* MOBILE MOON WITH NEW GLOW */}
+                {/* MOBILE MOON WITH GLOW */}
                 {isMobile && (
                   <div className="absolute top-[-26%] right-[-7%] w-[15vw] h-[15vw] pointer-events-none z-20">
-                    {/* The Glow (Matching Desktop Style) */}
                     <motion.div 
                       animate={{ opacity: [0.4, 0.7, 0.4], scale: [1, 1.2, 1] }}
                       transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
                       className="absolute inset-[-50%] rounded-full blur-[40px] bg-white/[0.15] z-10"
                     />
-                    
-                    {/* The Moon */}
                     <motion.img 
                       src="/full-moon.webp" 
                       alt="Moon"
@@ -145,9 +142,34 @@ export default function Home() {
           )}
 
           {activeTab === "about" && (
-            <motion.div key="about" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="text-center">
-              <h3 className="text-blue-400 text-[10px] tracking-[0.5em] uppercase font-black mb-6">Who We Are</h3>
-              <p className="text-sm text-gray-400 max-w-xl mx-auto mb-12">Vanilla Moon is a creative strategy and content lab built on two decades of leadership.</p>
+            <motion.div key="about" initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} className="text-left max-w-4xl flex flex-col items-center">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
+                <div>
+                  <h3 className="text-blue-400 text-[10px] tracking-[0.5em] uppercase font-black mb-6">Who We Are</h3>
+                  <p className="text-sm text-gray-400 leading-relaxed mb-6">
+                    Vanilla Moon is a creative strategy and content lab built on two decades of leadership at the intersection of media, branding, and storytelling.
+                  </p>
+                  <p className="text-sm text-gray-400 leading-relaxed">
+                    We engineer strategy-led stories that don't just fill a slot—they strengthen identity, build credibility, and create lasting loyalty.
+                  </p>
+                </div>
+                <div>
+                  <h3 className="text-blue-400 text-[10px] tracking-[0.5em] uppercase font-black mb-6">Concept to Reality</h3>
+                  <div className="space-y-6">
+                    {[
+                      { label: "Decode", desc: "Stripping back the noise to find the brand objective." },
+                      { label: "Strategize", desc: "Finding the imaginative angle—from quirky to mature." },
+                      { label: "Execute", desc: "Full lifecycle management: Audio, Video, & Micro-Dramas." },
+                      { label: "Impact", desc: "High-fidelity stories that connect and stay." }
+                    ].map((item) => (
+                      <div key={item.label}>
+                        <p className="text-[10px] font-bold text-white uppercase tracking-widest">{item.label}</p>
+                        <p className="text-xs text-gray-500">{item.desc}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
               <button onClick={() => setActiveTab("home")} className="text-[9px] tracking-[0.4em] uppercase border border-white/20 px-8 py-4 hover:bg-white hover:text-black transition-all font-bold">Return Home</button>
             </motion.div>
           )}
