@@ -43,8 +43,8 @@ export default function Home() {
       const clampedGamma = Math.max(-30, Math.min(30, gamma));
       const clampedBeta  = Math.max(-30, Math.min(30, beta - 30));
 
-      // 22px max offset — stays inside container, never clips
-      gyroMotionX.set((clampedGamma / 30) * 22);
+      // X increased to 38px for more left/right movement, Y stays at 22px
+      gyroMotionX.set((clampedGamma / 30) * 38);
       gyroMotionY.set((clampedBeta  / 30) * 22);
     };
 
