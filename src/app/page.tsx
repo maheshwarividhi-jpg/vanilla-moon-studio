@@ -8,10 +8,6 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("home");
   const [isMobile, setIsMobile] = useState(false);
 
-  // Gyroscope state — offsets in px from the default moon position
-  const [gyroX, setGyroX] = useState(0);
-  const [gyroY, setGyroY] = useState(0);
-
   const springConfig = { stiffness: 250, damping: 30 };
   const sX = useSpring(mouseX, springConfig);
   const sY = useSpring(mouseY, springConfig);
@@ -41,19 +37,17 @@ export default function Home() {
     if (!isMobile) return;
 
     const handleOrientation = (e: DeviceOrientationEvent) => {
-      // gamma = left/right tilt (-90 to 90), beta = front/back tilt (-180 to 180)
-      const gamma = e.gamma ?? 0; // left/right
-      const beta  = e.beta  ?? 0; // up/down
+      const gamma = e.gamma ?? 0;
+      const beta  = e.beta  ?? 0;
 
-      // Clamp tilt range to +/-30 degrees and map to +/-40px offset
       const clampedGamma = Math.max(-30, Math.min(30, gamma));
-      const clampedBeta  = Math.max(-30, Math.min(30, beta - 30)); // -30 offset so neutral hold maps to 0
+      const clampedBeta  = Math.max(-30, Math.min(30, beta - 30));
 
-      gyroMotionX.set((clampedGamma / 30) * 40);
-      gyroMotionY.set((clampedBeta  / 30) * 40);
+      // 22px max offset — stays inside container, never clips
+      gyroMotionX.set((clampedGamma / 30) * 22);
+      gyroMotionY.set((clampedBeta  / 30) * 22);
     };
 
-    // iOS 13+ requires permission
     if (
       typeof DeviceOrientationEvent !== "undefined" &&
       // @ts-expect-error requestPermission is iOS-only
@@ -68,7 +62,6 @@ export default function Home() {
         })
         .catch(console.error);
     } else {
-      // Android — no permission needed
       window.addEventListener("deviceorientation", handleOrientation);
     }
 
