@@ -38,12 +38,13 @@ body {
   align-items: center;
   justify-content: center;
   z-index: 20;
+  isolation: isolate;
 }
 
 /* 2. The Pinned Glow (Rendered behind the moon) */
 .moon-glow-pinned {
   position: absolute;
-  width: 250%; /* Large enough to radiate outward */
+  width: 250%;
   height: 250%;
   background: radial-gradient(circle, rgba(255, 255, 255, 0.25) 0%, transparent 70%);
   border-radius: 50%;
@@ -58,10 +59,8 @@ body {
   height: 100%;
   mix-blend-mode: screen;
   z-index: 20;
-  /* Surgical mask to remove square/diamond artifacts */
-  -webkit-mask-image: radial-gradient(circle, black 60%, transparent 72%);
-  mask-image: radial-gradient(circle, black 60%, transparent 72%);
+  -webkit-mask-image: radial-gradient(circle, black 55%, transparent 65%);
+  mask-image: radial-gradient(circle, black 55%, transparent 65%);
   -webkit-backface-visibility: hidden;
   backface-visibility: hidden;
-  transform: translateZ(0);
 }

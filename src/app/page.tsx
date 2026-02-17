@@ -8,9 +8,19 @@ export default function Home() {
   const [activeTab, setActiveTab] = useState("home");
   const [isMobile, setIsMobile] = useState(false);
 
+  // Gyroscope state — offsets in px from the default moon position
+  const [gyroX, setGyroX] = useState(0);
+  const [gyroY, setGyroY] = useState(0);
+
   const springConfig = { stiffness: 250, damping: 30 };
   const sX = useSpring(mouseX, springConfig);
   const sY = useSpring(mouseY, springConfig);
+
+  // Smooth springs for the gyroscope moon movement
+  const gyroMotionX = useMotionValue(0);
+  const gyroMotionY = useMotionValue(0);
+  const smoothGyroX = useSpring(gyroMotionX, { stiffness: 40, damping: 20 });
+  const smoothGyroY = useSpring(gyroMotionY, { stiffness: 40, damping: 20 });
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -26,6 +36,46 @@ export default function Home() {
       window.removeEventListener("resize", checkMobile);
     };
   }, [mouseX, mouseY]);
+
+  useEffect(() => {
+    if (!isMobile) return;
+
+    const handleOrientation = (e: DeviceOrientationEvent) => {
+      // gamma = left/right tilt (-90 to 90), beta = front/back tilt (-180 to 180)
+      const gamma = e.gamma ?? 0; // left/right
+      const beta  = e.beta  ?? 0; // up/down
+
+      // Clamp tilt range to +/-30 degrees and map to +/-40px offset
+      const clampedGamma = Math.max(-30, Math.min(30, gamma));
+      const clampedBeta  = Math.max(-30, Math.min(30, beta - 30)); // -30 offset so neutral hold maps to 0
+
+      gyroMotionX.set((clampedGamma / 30) * 40);
+      gyroMotionY.set((clampedBeta  / 30) * 40);
+    };
+
+    // iOS 13+ requires permission
+    if (
+      typeof DeviceOrientationEvent !== "undefined" &&
+      // @ts-expect-error requestPermission is iOS-only
+      typeof DeviceOrientationEvent.requestPermission === "function"
+    ) {
+      // @ts-expect-error requestPermission is iOS-only
+      DeviceOrientationEvent.requestPermission()
+        .then((response: string) => {
+          if (response === "granted") {
+            window.addEventListener("deviceorientation", handleOrientation);
+          }
+        })
+        .catch(console.error);
+    } else {
+      // Android — no permission needed
+      window.addEventListener("deviceorientation", handleOrientation);
+    }
+
+    return () => {
+      window.removeEventListener("deviceorientation", handleOrientation);
+    };
+  }, [isMobile, gyroMotionX, gyroMotionY]);
 
   const projects = [
     { title: "Audio Stories", category: "Podcast Production", desc: "Immersive 3D audio fiction & narrative series.", video: "/P1.mp4" },
@@ -90,9 +140,12 @@ export default function Home() {
                   <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>MOON</span>
                 </h1>
 
-                {/* MOBILE MOON WITH PINNED GLOW */}
+                {/* MOBILE MOON WITH GYROSCOPE */}
                 {isMobile && (
-                  <div className="moon-container">
+                  <motion.div
+                    className="moon-container"
+                    style={{ x: smoothGyroX, y: smoothGyroY }}
+                  >
                     <motion.div 
                       animate={{ opacity: [0.4, 0.7, 0.4], scale: [0.9, 1.1, 0.9] }}
                       transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -105,7 +158,7 @@ export default function Home() {
                       animate={{ rotate: 360 }}
                       transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
                     />
-                  </div>
+                  </motion.div>
                 )}
               </div>
               <p className="text-[11px] tracking-[0.5em] uppercase text-blue-400 mt-6 font-bold">ARCHITECTS OF IMAGINATION</p>
