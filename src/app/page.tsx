@@ -90,19 +90,19 @@ export default function Home() {
                   <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>MOON</span>
                 </h1>
 
-                {/* MOBILE MOON — SLOW DRIFT LOOP */}
+                {/* MOBILE MOON — FLUID INFINITY DRIFT */}
                 {isMobile && (
                   <motion.div
                     className="moon-container"
                     animate={{
-                      x: [0, 18, 8, -14, -18, -8, 10, 18, 0],
-                      y: [0, -8, -18, -12, 0, 12, 18, 8, 0],
+                      x: [0, 16, 0, -16, 0],
+                      y: [0, -10, 0, -10, 0],
                     }}
                     transition={{
-                      duration: 18,
+                      duration: 26,
                       repeat: Infinity,
-                      ease: "easeInOut",
-                      times: [0, 0.12, 0.25, 0.37, 0.5, 0.62, 0.75, 0.87, 1],
+                      ease: [0.45, 0.05, 0.55, 0.95],
+                      times: [0, 0.25, 0.5, 0.75, 1],
                     }}
                   >
                     <motion.div 
