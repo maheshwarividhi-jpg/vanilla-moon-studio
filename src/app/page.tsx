@@ -12,12 +12,6 @@ export default function Home() {
   const sX = useSpring(mouseX, springConfig);
   const sY = useSpring(mouseY, springConfig);
 
-  // Smooth springs for the gyroscope moon movement
-  const gyroMotionX = useMotionValue(0);
-  const gyroMotionY = useMotionValue(0);
-  const smoothGyroX = useSpring(gyroMotionX, { stiffness: 40, damping: 20 });
-  const smoothGyroY = useSpring(gyroMotionY, { stiffness: 40, damping: 20 });
-
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
     checkMobile();
@@ -32,43 +26,6 @@ export default function Home() {
       window.removeEventListener("resize", checkMobile);
     };
   }, [mouseX, mouseY]);
-
-  useEffect(() => {
-    if (!isMobile) return;
-
-    const handleOrientation = (e: DeviceOrientationEvent) => {
-      const gamma = e.gamma ?? 0;
-      const beta  = e.beta  ?? 0;
-
-      const clampedGamma = Math.max(-30, Math.min(30, gamma));
-      const clampedBeta  = Math.max(-30, Math.min(30, beta - 30));
-
-      // X increased to 38px for more left/right movement, Y stays at 22px
-      gyroMotionX.set((clampedGamma / 30) * 38);
-      gyroMotionY.set((clampedBeta  / 30) * 22);
-    };
-
-    if (
-      typeof DeviceOrientationEvent !== "undefined" &&
-      // @ts-expect-error requestPermission is iOS-only
-      typeof DeviceOrientationEvent.requestPermission === "function"
-    ) {
-      // @ts-expect-error requestPermission is iOS-only
-      DeviceOrientationEvent.requestPermission()
-        .then((response: string) => {
-          if (response === "granted") {
-            window.addEventListener("deviceorientation", handleOrientation);
-          }
-        })
-        .catch(console.error);
-    } else {
-      window.addEventListener("deviceorientation", handleOrientation);
-    }
-
-    return () => {
-      window.removeEventListener("deviceorientation", handleOrientation);
-    };
-  }, [isMobile, gyroMotionX, gyroMotionY]);
 
   const projects = [
     { title: "Audio Stories", category: "Podcast Production", desc: "Immersive 3D audio fiction & narrative series.", video: "/P1.mp4" },
@@ -133,11 +90,20 @@ export default function Home() {
                   <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>MOON</span>
                 </h1>
 
-                {/* MOBILE MOON WITH GYROSCOPE */}
+                {/* MOBILE MOON — SLOW DRIFT LOOP */}
                 {isMobile && (
                   <motion.div
                     className="moon-container"
-                    style={{ x: smoothGyroX, y: smoothGyroY }}
+                    animate={{
+                      x: [0, 18, 8, -14, -18, -8, 10, 18, 0],
+                      y: [0, -8, -18, -12, 0, 12, 18, 8, 0],
+                    }}
+                    transition={{
+                      duration: 18,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                      times: [0, 0.12, 0.25, 0.37, 0.5, 0.62, 0.75, 0.87, 1],
+                    }}
                   >
                     <motion.div 
                       animate={{ opacity: [0.4, 0.7, 0.4], scale: [0.9, 1.1, 0.9] }}
