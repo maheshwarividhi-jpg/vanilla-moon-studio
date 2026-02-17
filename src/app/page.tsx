@@ -90,34 +90,35 @@ export default function Home() {
                   <span className="text-transparent" style={{ WebkitTextStroke: '2px white' }}>MOON</span>
                 </h1>
 
-                {/* MOBILE MOON — FLUID INFINITY DRIFT */}
+                {/* MOBILE MOON — ROTATE AND GLOW IN PLACE */}
                 {isMobile && (
-                  <motion.div
-                    className="moon-container"
-                    animate={{
-                      x: [0, 16, 0, -16, 0],
-                      y: [0, -10, 0, -10, 0],
-                    }}
-                    transition={{
-                      duration: 26,
-                      repeat: Infinity,
-                      ease: [0.45, 0.05, 0.55, 0.95],
-                      times: [0, 0.25, 0.5, 0.75, 1],
-                    }}
-                  >
-                    <motion.div 
-                      animate={{ opacity: [0.4, 0.7, 0.4], scale: [0.9, 1.1, 0.9] }}
-                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                  <div className="moon-container">
+                    {/* Pulsing glow */}
+                    <motion.div
                       className="moon-glow-pinned"
+                      animate={{
+                        opacity: [0.3, 0.8, 0.3],
+                        scale: [0.85, 1.2, 0.85],
+                      }}
+                      transition={{
+                        duration: 3,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
                     />
-                    <motion.img 
-                      src="/full-moon.webp" 
+                    {/* Slowly rotating moon */}
+                    <motion.img
+                      src="/full-moon.webp"
                       alt="Moon"
                       className="moon-asset"
                       animate={{ rotate: 360 }}
-                      transition={{ duration: 120, repeat: Infinity, ease: "linear" }}
+                      transition={{
+                        duration: 120,
+                        repeat: Infinity,
+                        ease: "linear",
+                      }}
                     />
-                  </motion.div>
+                  </div>
                 )}
               </div>
               <p className="text-[11px] tracking-[0.5em] uppercase text-blue-400 mt-6 font-bold">ARCHITECTS OF IMAGINATION</p>
